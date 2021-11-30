@@ -1,0 +1,23 @@
+{
+  "name": "simple-sharer",
+  "version": "1.0.4",
+  "description": "A javascript framework to share url to social media handles in an easy and simple way.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "social share",
+    "social",
+    "media",
+    "share",
+    "url",
+    "share on facebook",
+    "share on twitter",
+    "share on whatsapp",
+    "share on reddit",
+    "copy link to clipboard"
+  ],
+  "author": "buildbrothers",
+  "license": "ISC"
+}
