@@ -92,3 +92,7 @@ sh.target = "_parent" //by default the target is _blank
 ```
 
 When no url is defined, simple-sharer uses the current url of the page.
+
+# License 
+
+This program is licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007. Please read the LICENSE.txt text document included with the source code if you would like to read the terms of the license.
