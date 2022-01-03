@@ -1,7 +1,7 @@
 # simple-sharer _[by BUILDBROTHERS.COM]_
 _A javascript framework to share url to social media sites like facebook, twitter, reddit, linkedin, whastapp in an easy and simple way._
 
-_Start this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
+_Star this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
 
 ## Supported Javascript Frameworks:
 
@@ -148,7 +148,7 @@ const url = CleanURL(www.urwebsite.com/item/laptop 2GB Ram For Sale?)
 
 // will return www.urwebsite.com/item/laptop-2gb-ram-for-sale
 ```
-_Start this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
+_Star this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
 # License 
 
 This program is licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007. Please read the LICENSE.txt text document included with the source code if you would like to read the terms of the license.
