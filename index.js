@@ -2,7 +2,7 @@ class simplesharer {
   constructor(media, url, target) {
     this.media = media;
     this.append = "";
-    this.url = url || CurrentURL();
+    this.url = this.CleanURL(url);
     this.target = target || "_blank";
     this.hashtags = [];
     this.text = "";
@@ -16,7 +16,7 @@ class simplesharer {
   }
   verifyUrl() {
     if (Boolean(this.append)) {
-      this.url = `${this.url}${this.append}`;
+      this.url = `${this.url}${this.CleanURL(this.append)}`;
     }
     if (!this.url) {
       console.error("URL is required");
@@ -51,10 +51,30 @@ class simplesharer {
       `https://www.linkedin.com/sharing/share-offsite/?url=${this.url}`
     );
   }
+  CleanURL(url) {
+    if (url) {
+      let temp = url
+        .replace(/[^a-zA-Z0-9]\s/g, "")
+        .replace(/\s/g, "-")
+        .toLowerCase();
+      this.url = temp;
+      return temp;
+    }
+    if (typeof window !== "undefined") {
+      let temp = window.location.href
+        .replace(/[^a-zA-Z0-9]\s/g, "")
+        .replace(/\s/g, "-")
+        .toLowerCase();
+      this.url = temp;
+      return temp;
+    }
+  }
+
   Copy() {
     this.verifyUrl();
     navigator.clipboard.writeText(this.url);
   }
+
   shareWindow(url) {
     if (typeof window !== "undefined") {
       window.open(
@@ -69,9 +89,9 @@ class simplesharer {
 
 function Verify(info) {
   const temp = {};
-  temp.url = info.url || CurrentURL();
+  temp.url = CleanURL(info.url);
   if (info.append) {
-    temp.url = `${temp.url}${info.append}`;
+    temp.url = `${temp.url}${CleanURL(info.append)}`;
   }
   if (!temp.url) {
     console.error("URL is required");
@@ -80,11 +100,26 @@ function Verify(info) {
   return temp;
 }
 
+function CleanURL(url) {
+  if (url) {
+    return url
+      .replace(/[^a-zA-Z0-9]\s/g, "")
+      .replace(/\s/g, "-")
+      .toLowerCase();
+  }
+  if (typeof window !== "undefined") {
+    return window.location.href
+      .replace(/[^a-zA-Z0-9]\s/g, "")
+      .replace(/\s/g, "-")
+      .toLowerCase();
+  }
+}
+
 function Facebook(info = {}) {
   const temp = Verify(info);
   shareWindow(`https://www.facebook.com/sharer.php?u=${temp.url}`);
 }
-function Linkedin() {
+function Linkedin(info = {}) {
   const temp = Verify(info);
   shareWindow(
     `https://www.linkedin.com/sharing/share-offsite/?url=${temp.url}`
@@ -113,11 +148,6 @@ function Copy(info = {}) {
   const temp = Verify(info);
   navigator.clipboard.writeText(temp.url);
 }
-function CurrentURL() {
-  if (typeof window !== "undefined") {
-    return window.location.href;
-  }
-}
 
 function shareWindow(url) {
   if (typeof window !== "undefined") {
@@ -136,4 +166,5 @@ module.exports = {
   Reddit,
   Whatsapp,
   Copy,
+  Linkedin,
 };

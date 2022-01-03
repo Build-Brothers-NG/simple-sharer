@@ -1,6 +1,8 @@
 # simple-sharer _[by BUILDBROTHERS.COM]_
 _A javascript framework to share url to social media sites like facebook, twitter, reddit, linkedin, whastapp in an easy and simple way._
 
+_Start this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
+
 ## Supported Javascript Frameworks:
 
 - React
@@ -16,6 +18,7 @@ _A javascript framework to share url to social media sites like facebook, twitte
 - Share url to Twitter
 - Share url to Linkedin
 - Copy url to clipboard
+- Clean URL
 
 Simple-sharer is a lightweight javascript (<4KB) client-side framework, which makes it very easy and simple to share url to various social media sites.
 Simple-sharer is created by BuildBrothers.com
@@ -126,13 +129,26 @@ function App(){
     const items = [
     {id: 12345, name: 'item 1'},{id: 67890, name: 'item 2'}]
     return (
-        {card.map(item => {
+        {items.map(item => {
         return <Card item={item} />
         })
     )
 }
 ```
+Let say you have an ecoomerce website where users can add new items. And sometimes you can not predict the names of this item, for example a user might include a question mark in the name of item; example:  "Laptop 2GB Ram For Sale?"
+And in the url it might look like this; www.urwebsite.com/item/laptop 2GB Ram For Sale?
+And if you try to access this link it might not even go through.
+Using Simple-sharer you can clean like this url by calling the CleanURL method or function
+```
 
+const sh = new simplesharer()
+sh.url = sh.CleanURL(www.urwebsite.com/item/laptop 2GB Ram For Sale?)
+or
+const url = CleanURL(www.urwebsite.com/item/laptop 2GB Ram For Sale?)
+
+// will return www.urwebsite.com/item/laptop-2gb-ram-for-sale
+```
+_Start this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
 # License 
 
 This program is licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007. Please read the LICENSE.txt text document included with the source code if you would like to read the terms of the license.
