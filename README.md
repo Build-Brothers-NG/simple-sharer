@@ -12,15 +12,15 @@ _Star this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
 
 ## Features
 
-- Share url to Facebook
-- Share url to Reddit
-- Share url to Whatsapp
-- Share url to Twitter
-- Share url to Linkedin
-- Copy url to clipboard
-- Clean URL
+- share url to facebook
+- share url to reddit
+- share url to Whatsapp
+- share url to twitter
+- share url to linkedin
+- copy url to clipboard
+- Clean String
 
-Simple-sharer is a lightweight javascript (<4KB) client-side framework, which makes it very easy and simple to share url to various social media sites.
+Simple-sharer is a lightweight (<4KB) javascript framework, which makes it very easy and simple to share URL to various social media sites.
 Simple-sharer is created by BuildBrothers.com
 
 ## Here is how to get started with simple-sharer.
@@ -39,55 +39,81 @@ Install using yarn
 yarn add simple-sharer
 ```
 
-## 1st Example with React.js
+## Example 1 with React.js
 
 ```sh
-import React from 'react'
-import { simplesharer } from "simple-sharer";
+import React from "react";
+import { Simplesharer } from "./simplesharer";
 
-function App(){
-    const sh = new simplesharer()
-    sh.url = 'www.buildbrothers.com' //your url
-    sh.title = "Build Brothers Website" //title for Reddit, this is optional
-    sh.text = 'Passionate Mobile and Web Apps Development Team' // description for twitter, not more than a hundred characters, optional.
-    sh.hashtags = ['buildbrothers', 'bb', 'software dev team'] // a list of hashtags for twitter,also optional
+function App() {
+  const sh = new Simplesharer();
+  sh.url = "www.buildbrothers.com"; //your url
+  sh.title = "Build Brothers Website"; //title for reddit, this is optional
+  sh.text = "Passionate Mobile and Web Apps Development Team"; // description for twitter, not more than a hundred characters, optional.
+  sh.hashtags = ["buildbrothers", "bb", "software dev team"]; // a list of hashtags for twitter,also optional
 
-    return (
+  return (
     <div>
-        // call the share method, passing the platform name as a parameter to share.
-        <button onClick={()=> sh.Share('Facebook') }>Share on Facebook</button>
-        <button onClick={()=> sh.Share('twitter') }>Share on Twitter</button>
-        <button onClick={()=> sh.Share('WHATSAPP') }>Share on Whatsapp</button>
-        // Or directly call the platform as a method
-        <button onClick={()=> sh.Linkedin() }>Share on Linkedin</button>
-        <button onClick={()=> sh.Reddit() }>Share on Reddit</button>
-        <button onClick={()=> sh.Copy() }>Copy Link</button>
+      {/* call the share method, passing the platform name as a parameter to share. */}
+      <button onClick={() => sh.share("Facebook")}>share on facebook</button>
+      <button onClick={() => sh.share("tWitter")}>share on twitter</button>
+      <button onClick={() => sh.share("WHATSAPP")}>share on Whatsapp</button>
+      {/* // Or directly call the platform as a method */}
+      <button onClick={() => sh.linkedin()}>share on linkedin</button>
+      <button onClick={() => sh.reddit()}>share on reddit</button>
+      <button onClick={() => sh.copy()}>copy Link</button>
     </div>
-    )
+  );
 }
 export default App;
+
 ```
-
-## 2nd Example with React.js
+# Note:
+The parameter for the share method is case insensitive, as long as it is a valid name, the function will get executed.
+the valid parameters are:
+facebook, twitter, reddit, linkedin, whatsapp, copy.
+## Example 2 with React.js
 
 ```sh
-import React from 'react'
-// you can directly import these methods and use it without the simplesharer class object
-import { Facebook, Twitter, Reddit, Linkedin, Copy } from "simple-sharer";
+import React from "react";
+// you can directly import these methods and use it without the Simplesharer class object
+import {
+  facebook,
+  twitter,
+  reddit,
+  linkedin,
+  copy,
+  whatsapp,
+} from "./simplesharer";
 
-function App(){
-    return (
+function App() {
+  return (
     <div>
-        <button onClick={()=> Facebook({url: 'www.buildbrothers.com'})}>Share on Facebook</button>
-        <button onClick={()=> Twitter({url:'www.buildbrothers.com', text: 'Passionate Mobile and Web Apps  Development Team', hashtags: ['buildbrothers', 'bb', 'software dev team']}) }>Share on Twitter</button>
-        // if no url is provided, it will use the current page url.
-        <button onClick={()=> Whatsapp() }>Share on Whatsapp</button>
-        <button onClick={()=> Reddit({title: 'Build Brothers Website'}) }>Share on Reddit</button>
-        <button onClick={()=> Copy() }>Copy Link</button>
+      <button onClick={() => facebook({ url: "www.buildbrothers.com" })}>
+        share on facebook
+      </button>
+      <button
+        onClick={() =>
+          twitter({
+            url: "www.buildbrothers.com",
+            text: "Passionate Mobile and Web Apps  Development Team",
+            hashtags: ["buildbrothers", "bb", "software dev team"],
+          })
+        }
+      >
+        share on twitter
+      </button>
+      {/* if no url is provided, it will use the current page url. */}
+      <button onClick={() => whatsapp()}>share on Whatsapp</button>
+      <button onClick={() => reddit({ title: "Build Brothers Website" })}>
+        share on reddit
+      </button>
+      <button onClick={() => copy()}>copy Link</button>
     </div>
-    )
+  );
 }
 export default App;
+
 ```
 
 # Note:
@@ -95,60 +121,34 @@ export default App;
 By default simple-sharer pop up a new window while sharing url, to use the parent window, you can change the target like this;
 
 ```sh
-const sh = new simplesharer()
+const sh = new Simplesharer()
 sh.target = "_parent" //by default the target is _blank
 ```
 
 When no url is defined, simple-sharer uses the current url of the page.
 
-For Dynamic routing, i.e when the url pathname has to change dynamically. Example;
-if you have a bunch of card components that taks you to different items and if each card has a share button, we need  an id of the item to route directly to the item incase we decide to share the url. And each item has a different id.
+You can also clean a string, before sharing it to social media site using the cleanString function. 
+
+# Example:
 ```
-import {simplesharer, Facebook} from "simple-sharer"
-function Card(props){
-    const {id, name} = props.item
-    const sh = new simplesharer()
-    // Here is where we append the id to the url, if the url is www.buildbrothers.com, and the id is '12345' we will get www.buildbrothers.com/12345. 
-    sh.append = `/${id}`
-    
-    return (
-        <div>
-            <....../>
-            <div className='share'>
-                <butto sh.Copy()n>Copy URL</button>
-                <button Facebook({append: `${id}`})>Share on Facebook</button>
-            </div>
-        </div>
-    )
-}
-```
-In your app component;
-```
-import Card from './card'
+import React from 'react'
+import { cleanString } from "simple-sharer";
+
 function App(){
-    const items = [
-    {id: 12345, name: 'item 1'},{id: 67890, name: 'item 2'}]
+    const uncleanString = "The 'Quick'? Brown Fox Jump, Over The Lazy Dog;"
+    const clean = cleanString(uncleanString) 
+    //will return "the-quick-brown-fox-jump-over-the-lazt-dog"
     return (
-        {items.map(item => {
-        return <Card item={item} />
-        })
+    <div>
+        <...../>
+    </div>
     )
 }
-```
-Let say you have an ecoomerce website where users can add new items. And sometimes you can not predict the names of this item, for example a user might include a question mark in the name of item; example:  "Laptop 2GB Ram For Sale?"
-And in the url it might look like this; www.urwebsite.com/item/laptop 2GB Ram For Sale?
-And if you try to access this link it might not even go through.
-Using Simple-sharer you can clean like this url by calling the CleanURL method or function
+export default App;
 ```
 
-const sh = new simplesharer()
-sh.url = sh.CleanURL(www.urwebsite.com/item/laptop 2GB Ram For Sale?)
-or
-const url = CleanURL(www.urwebsite.com/item/laptop 2GB Ram For Sale?)
-
-// will return www.urwebsite.com/item/laptop-2gb-ram-for-sale
-```
 _Star this project on GitHub https://github.com/Build-Brothers-NG/simple-sharer_
+```
 # License 
 
 This program is licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007. Please read the LICENSE.txt text document included with the source code if you would like to read the terms of the license.

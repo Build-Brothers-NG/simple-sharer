@@ -1,43 +1,44 @@
-class simplesharer {
-  constructor(media, url, target) {
-    this.media = media;
-    this.append = "";
-    this.url = this.CleanURL(url);
+class Simplesharer {
+  constructor(socialSite, url, target) {
+    this.socialSite = socialSite;
     this.target = target || "_blank";
     this.hashtags = [];
     this.text = "";
     this.title = "";
+    if (typeof window !== "undefined") {
+      this.url = url || window.location.href;
+    }
   }
-  share(media) {
-    let temp = media || this.media;
+  share(socialSite) {
+    let temp = socialSite || this.socialSite;
     temp = temp.toLowerCase();
-    temp = temp[0].toUpperCase() + temp.substring(1, temp.length);
-    this[temp]();
+    try {
+      this[temp]();
+    } catch (e) {
+      console.error("Invalid parameter");
+    }
   }
   verifyUrl() {
-    if (Boolean(this.append)) {
-      this.url = `${this.url}${this.CleanURL(this.append)}`;
-    }
     if (!this.url) {
       console.error("URL is required");
       return;
     }
   }
-  Facebook() {
+  facebook() {
     this.verifyUrl();
     this.shareWindow(`https://www.facebook.com/sharer.php?u=${this.url}`);
   }
-  Reddit() {
+  reddit() {
     this.verifyUrl();
     this.shareWindow(
       `https://reddit.com/submit?url=${this.url}&title=${this.title}`
     );
   }
-  Whatsapp() {
+  whatsapp() {
     this.verifyUrl();
     this.shareWindow(`whatsapp://send?text=${this.url}`);
   }
-  Twitter() {
+  twitter() {
     this.verifyUrl();
     this.shareWindow(
       `https://twitter.com/intent/tweet?url=${
@@ -45,53 +46,41 @@ class simplesharer {
       }&text=${this.text.substring(0, 100)}&hashtags=${this.hashtags.join()}`
     );
   }
-  Linkedin() {
+  linkedin() {
     this.verifyUrl();
     this.shareWindow(
       `https://www.linkedin.com/sharing/share-offsite/?url=${this.url}`
     );
   }
-  CleanURL(url) {
-    if (url) {
-      let temp = url
-        .replace(/[^a-zA-Z0-9]\s/g, "")
-        .replace(/\s/g, "-")
-        .toLowerCase();
-      this.url = temp;
-      return temp;
-    }
-    if (typeof window !== "undefined") {
-      let temp = window.location.href
-        .replace(/[^a-zA-Z0-9]\s/g, "")
-        .replace(/\s/g, "-")
-        .toLowerCase();
-      this.url = temp;
-      return temp;
-    }
-  }
 
-  Copy() {
+  copy() {
     this.verifyUrl();
-    navigator.clipboard.writeText(this.url);
+    const elem = document.createElement("textarea");
+    elem.value = this.url;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand("copy");
+    document.body.removeChild(elem);
   }
 
   shareWindow(url) {
     if (typeof window !== "undefined") {
+      const y = window.top.outerHeight / 2 + window.top.screenY - 500 / 2;
+      const x = window.top.outerWidth / 2 + window.top.screenX - 500 / 2;
       window.open(
         url,
         this.target,
         this.target === "_blank" &&
-          "location,status,scrollbars,resizable,width=500, height=500"
+          `location,status,scrollbars,resizable,width=500,height=500,left=${x},top=${y}`
       );
     }
   }
 }
 
-function Verify(info) {
+function verify(info) {
   const temp = {};
-  temp.url = CleanURL(info.url);
-  if (info.append) {
-    temp.url = `${temp.url}${CleanURL(info.append)}`;
+  if (typeof window !== "undefined") {
+    temp.url = info.url || window.location.href;
   }
   if (!temp.url) {
     console.error("URL is required");
@@ -100,42 +89,34 @@ function Verify(info) {
   return temp;
 }
 
-function CleanURL(url) {
-  if (url) {
-    return url
-      .replace(/[^a-zA-Z0-9]\s/g, "")
-      .replace(/\s/g, "-")
-      .toLowerCase();
-  }
-  if (typeof window !== "undefined") {
-    return window.location.href
-      .replace(/[^a-zA-Z0-9]\s/g, "")
-      .replace(/\s/g, "-")
-      .toLowerCase();
-  }
+function cleanString(url) {
+  return url
+    .replace(/[^A-Za-z|0-9|\s|/]/g, "")
+    .replace(/\s/g, "-")
+    .toLowerCase();
 }
 
-function Facebook(info = {}) {
-  const temp = Verify(info);
+function facebook(info = {}) {
+  const temp = verify(info);
   shareWindow(`https://www.facebook.com/sharer.php?u=${temp.url}`);
 }
-function Linkedin(info = {}) {
-  const temp = Verify(info);
+function linkedin(info = {}) {
+  const temp = verify(info);
   shareWindow(
     `https://www.linkedin.com/sharing/share-offsite/?url=${temp.url}`
   );
 }
-function Whatsapp(info = {}) {
-  const temp = Verify(info);
+function whatsapp(info = {}) {
+  const temp = verify(info);
   shareWindow(`whatsapp://send?text=${temp.url}`);
 }
-function Reddit(info = {}) {
-  const temp = Verify(info);
+function reddit(info = {}) {
+  const temp = verify(info);
   temp.title = info.title || "";
   shareWindow(`https://reddit.com/submit?url=${temp.url}&title=${temp.title}`);
 }
-function Twitter(info = {}) {
-  const temp = Verify(info);
+function twitter(info = {}) {
+  const temp = verify(info);
   temp.text = info.text || "";
   temp.hashtags = info.hashtags || [];
   shareWindow(
@@ -144,27 +125,43 @@ function Twitter(info = {}) {
     }&text=${temp.text.substring(0, 100)}&hashtags=${temp.hashtags.join()}`
   );
 }
-function Copy(info = {}) {
-  const temp = Verify(info);
-  navigator.clipboard.writeText(temp.url);
+function copy(url) {
+  if (typeof window !== "undefined") {
+    url = url || window.location.href;
+    try {
+      navigator.clipboard.writeText(url);
+      const elem = document.createElement("textarea");
+      elem.value = url;
+      document.body.appendChild(elem);
+      elem.select();
+      document.execCommand("copy");
+      document.body.removeChild(elem);
+    } catch (e) {
+      navigator.clipboard.writeText(url);
+    }
+  }
 }
 
 function shareWindow(url) {
   if (typeof window !== "undefined") {
+    const y = window.top.outerHeight / 2 + window.top.screenY - 500 / 2;
+    const x = window.top.outerWidth / 2 + window.top.screenX - 500 / 2;
     window.open(
       url,
-      "_blank",
-      "location,status,scrollbars,resizable,width=500, height=500"
+      this.target,
+      this.target === "_blank" &&
+        `location,status,scrollbars,resizable,width=500,height=500,left=${x},top=${y}`
     );
   }
 }
 
 module.exports = {
-  simplesharer,
-  Facebook,
-  Twitter,
-  Reddit,
-  Whatsapp,
-  Copy,
-  Linkedin,
+  Simplesharer,
+  facebook,
+  twitter,
+  reddit,
+  whatsapp,
+  copy,
+  linkedin,
+  cleanString,
 };
